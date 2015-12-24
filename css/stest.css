@@ -1,0 +1,37 @@
+body {
+	color: #F0ECD4;
+    font-family: 'Overlock', cursive;
+    font-weight: 400;
+    font-size: 100%;
+    background-color: #260126;
+}
+
+/* centered columns styles from http://www.minimit.com/articles/solutions-tutorials/bootstrap-3-responsive-centered-columns*/
+.row-centered {
+    text-align: center;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.col-centered {
+    display: inline-block;
+    /*float: none;*/
+    /* reset the text-align */
+    text-align: left;
+    /* inline-block space fix */
+    margin-right: -4px;
+}
+
+.main-content {
+	margin: 5px 5px 0 5px;
+	font-size: 2em;
+}
+
+#explanation {
+   background-color: #424242;
+ }
+
+.animatable-text-div {
+    position: relative;
+    display:inline-block;
+}
