@@ -1,64 +1,30 @@
 'use strict';
 
-var animatedString = new Testable();
+//// temporary tests of the testing functions
+var tempTest = new Testable();
 
-animatedString.addFunction('addNums', function(num1, num2) {
+tempTest.addFunction('addNums', function(num1, num2) {
 	return num1 + num2;
 });
-console.log('addNums 1,2  = ' + animatedString.addNums(6,7).expectToBe(13).endTests());
+console.log('addNums 1,2  = ' + tempTest.addNums(6,7).expectToBe(13).endTests());
 
-animatedString.addFunction('concatStrings', function(str1, str2) {
+tempTest.addFunction('concatStrings', function(str1, str2) {
 	return str1.concat(str2);
 });
-console.log('concatStrings result ' + animatedString.concatStrings('foo','bar').expectContains('not this').expectToBe('foobar').endTests());
+console.log('concatStrings result ' + tempTest.concatStrings('foo','bar').expectContains('not this').expectToBe('foobar').endTests());
 
-//end addFunction test
-
-
-$(window).load(function() {
-	var elementToAnimate = '#explanation';
-
-	var putCharactersIntoDivsTest = {
-		'value': 'this is the wrong value',
-		'contains': '<div id="char_0" class="animatable-text-div">a</div>'
-	};
-	animatedString.putCharactersIntoDivs(elementToAnimate, putCharactersIntoDivsTest);
-
-	var timelineTest = {
-		'type': TimelineLite,
-		'numberOfTests': 1,
-		//'value':
-		//'length':
-		//etc
-	};
-	var timeline = animatedString.prepareAnimTimeline(elementToAnimate, timelineTest);
-
-	$('#explanation').bind('mouseover', function(event) {
-		if (timeline.isActive()) {
-			timeline.pause();
-		} else if (timeline.paused()) {
-			timeline.resume();
-		} else {
-			timeline.restart();
-		}
-	});
-
-	$('#explanation').bind('mouseout', function(event) {
-		if (timeline.paused()) {
-			timeline.resume();
-		}
-	});
+tempTest.addFunction('loopingFn', function() {
+	var i;
+	for(i=0; i<100; i++) {
+		tempTest.addNums(0,i).expectToBe(2,3).endTests();
+	}
 });
+tempTest.loopingFn();
+//// end test
 
-// QQQ currently we are having to write this.test() just before the return value
-// somehow we want the functions to automatically run that just before the return value
-// or maybe just after the return value
-// Also, the testObj is being made manually - instead want to make some kind of class
-// so you would do new TestParams('value', nubmeroftests, etc)
-///////
-// Getting the above worked out - see sTest.js addFunction()
+var animatedString = new Testable();
 
-animatedString.putCharactersIntoDivs = function(containingElementId, testObj) {
+animatedString.addFunction('putCharactersIntoDivs', function(containingElementId) {
 	var i;
 	var divId;
 	var textInDivs = '';
@@ -74,11 +40,10 @@ animatedString.putCharactersIntoDivs = function(containingElementId, testObj) {
 		textInDivs += '<div id="' + divId + '" class="animatable-text-div">' + animatableChar + '</div>'; //.animatable-text-div sets position = relative
 	}
 	$(containingElementId).html(textInDivs);
-	//this.test(textInDivs, testObj);
 	return textInDivs;
-};
+});
 
-animatedString.prepareAnimTimeline = function(containingElementId, testObj) {
+animatedString.addFunction('prepareAnimTimeline', function(containingElementId, testObj) {
 	var i;
 	var arrayOfDivs;
 	arrayOfDivs = $(containingElementId + " > div");
@@ -96,6 +61,39 @@ animatedString.prepareAnimTimeline = function(containingElementId, testObj) {
     		opacity: 1.0,
     		ease: Elastic.easeOut
     	}, 0.1);
-    //this.test(rippleTextTimeline, testObj);
     return rippleTextTimeline;
-};
+});
+
+$(window).load(function() {
+	var elementToAnimate = '#explanation';
+
+	animatedString.putCharactersIntoDivs(elementToAnimate)
+		.describe('Testing animatedString.putCharactersIntoDivs for the div ' + elementToAnimate)
+		.expectContains('<div id="char_0" class="animatable-text-div">a</div>')
+		.expectContains('<div id="char_1" class="animatable-text-div">')
+		.expectContains('<div id="char_16" class="animatable-text-div">t</div>')
+		.expectDoesNotContain('<div id="char_16" class="animatable-text-div">t</div>')
+		.endTests();
+
+	var timeline = animatedString.prepareAnimTimeline(elementToAnimate)
+		.describe('Testing animatedString.prepareAnimTimeline')
+		.expectType(TimelineLite)
+		.printActual()
+		.endTests();
+
+	$('#explanation').bind('mouseover', function(event) {
+		if (timeline.isActive()) {
+			timeline.pause();
+		} else if (timeline.paused()) {
+			timeline.resume();
+		} else {
+			timeline.restart();
+		}
+	});
+
+	$('#explanation').bind('mouseout', function(event) {
+		if (timeline.paused()) {
+			timeline.resume();
+		}
+	});
+});
