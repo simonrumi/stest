@@ -2,6 +2,20 @@
 
 var animatedString = new STester();
 
+// trying to use the addFunction system
+var addNumsTestObj = {
+	'value': 4,
+}
+
+animatedString.addFunction('addNums', function(num1, num2) {
+	return num1 + num2;
+});
+
+console.log('addNums 6,7  = ' + animatedString.addNums(6,7));
+
+//end addFunction test
+
+
 $(window).load(function() {
 	var elementToAnimate = '#explanation';
 
@@ -42,7 +56,8 @@ $(window).load(function() {
 // or maybe just after the return value
 // Also, the testObj is being made manually - instead want to make some kind of class
 // so you would do new TestParams('value', nubmeroftests, etc)
-
+///////
+// Getting the above worked out - see sTest.js addFunction()
 
 animatedString.putCharactersIntoDivs = function(containingElementId, testObj) {
 	var i;
@@ -60,7 +75,7 @@ animatedString.putCharactersIntoDivs = function(containingElementId, testObj) {
 		textInDivs += '<div id="' + divId + '" class="animatable-text-div">' + animatableChar + '</div>'; //.animatable-text-div sets position = relative
 	}
 	$(containingElementId).html(textInDivs);
-	this.test(textInDivs, testObj);
+	//this.test(textInDivs, testObj);
 	return textInDivs;
 };
 
@@ -82,6 +97,6 @@ animatedString.prepareAnimTimeline = function(containingElementId, testObj) {
     		opacity: 1.0,
     		ease: Elastic.easeOut
     	}, 0.1);
-    this.test(rippleTextTimeline, testObj);
+    //this.test(rippleTextTimeline, testObj);
     return rippleTextTimeline;
 };
