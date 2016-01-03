@@ -1,17 +1,16 @@
 'use strict';
 
-var animatedString = new STester();
+var animatedString = new Testable();
 
-// trying to use the addFunction system
-var addNumsTestCollection = {
-	'value': 13,
-}
-
-animatedString.addFunction('addNums', addNumsTestCollection, function(num1, num2) {
+animatedString.addFunction('addNums', function(num1, num2) {
 	return num1 + num2;
 });
+console.log('addNums 1,2  = ' + animatedString.addNums(6,7).expectToBe(13).endTests());
 
-console.log('addNums 6,7  = ' + animatedString.addNums(6,7));
+animatedString.addFunction('concatStrings', function(str1, str2) {
+	return str1.concat(str2);
+});
+console.log('concatStrings result ' + animatedString.concatStrings('foo','bar').expectContains('not this').expectToBe('foobar').endTests());
 
 //end addFunction test
 
