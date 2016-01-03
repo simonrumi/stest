@@ -3,11 +3,11 @@
 var animatedString = new STester();
 
 // trying to use the addFunction system
-var addNumsTestObj = {
-	'value': 4,
+var addNumsTestCollection = {
+	'value': 13,
 }
 
-animatedString.addFunction('addNums', function(num1, num2) {
+animatedString.addFunction('addNums', addNumsTestCollection, function(num1, num2) {
 	return num1 + num2;
 });
 

@@ -3,20 +3,17 @@
 var STester = function STester() {
 	this.loggingOn = true;
 
-	// CQQQQQQ Currently addFunction just runs the function as-is
-	// next step would be to get it to test the output
-	this.addFunction = function(functionName, functionObj) {
+	this.addFunction = function(functionName, testCollection, functionObj) {
 		// in case we need this, this regex is apparently how Angular gets argument names for its Dependency Injection system
 		// see http://krasimirtsonev.com/blog/article/Dependency-injection-in-JavaScript
 		//var funcDeclarationRegex = /^function\s*[^\(]*\(\s*([^\)]*)\)/;
 		//var argumentListAsString = functionObj.toString().match(funcDeclarationRegex)[1]; //this gets us a string like 'arg1, arg2, arg3'
 		//var argumentsArray = argumentListAsString.replace(/ /g, '').split(','); //remove the spaces, then split on the commas to get an array of the arguments
 
-		STester.prototype[functionName] = function () {
-			var args = Array.prototype.slice.call(arguments, 0); //this turns arguments object into a regular Array
-			var scope = this;
-			var returnValue = functionObj.apply(scope,args);
-			//this.test(returnValue, testCollection); // here we need the testCollection somehow - it will be known each time the function is run, not when the function is created
+		this[functionName] = function () {
+			var args = Array.prototype.slice.call(arguments, 0); //this turns arguments object into a regular Array, explanation here: https://shifteleven.com/articles/2007/06/28/array-like-objects-in-javascript/
+			var returnValue = functionObj.apply(this,args);
+			this.test(returnValue, testCollection); // here we need the testCollection somehow - it will be known each time the function is run, not when the function is created
 			return returnValue;
 		}
 	};
