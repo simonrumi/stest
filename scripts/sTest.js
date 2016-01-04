@@ -50,8 +50,6 @@ var TestItem = function(resultToTest) {
 		return this;
 	}
 
-	// QQQQQQQQQ checkIterations system doesn't work because every time we are creating a new TestItem
-	// ....solution is probably to check if there is an existing TestItem and use that instead of creating a new one
 	/*
 	* Check to see whether the current number of iterations is less than the iterationLimit
 	* return true if it is, false if we have reached the iterationLimit
