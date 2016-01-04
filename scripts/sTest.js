@@ -5,10 +5,23 @@ var Testable = function Testable() {
 		this[functionName] = function () {
 			var args = Array.prototype.slice.call(arguments, 0); //this turns arguments object into a regular Array, explanation here: https://shifteleven.com/articles/2007/06/28/array-like-objects-in-javascript/
 			var returnValue = functionObj.apply(this,args);
-			return new TestItem(returnValue);
+			var testItem = this.setUpTestItem(functionName, returnValue);
+			return testItem;
 		};
-
 	};
+
+	this.setUpTestItem = function(functionName, resultToTest) {
+		if (this.testItems[functionName]) {
+			this.testItems[functionName].actual = resultToTest;
+		} else {
+			this.testItems[functionName] = new TestItem(resultToTest);
+		}
+		return this.testItems[functionName];
+	}
+
+	// entries in this object look like this
+	// {myFunctionName: 'some result to test', etc}
+	this.testItems = {};
 }
 
 /****
