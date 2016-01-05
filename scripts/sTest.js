@@ -27,19 +27,30 @@ var Testable = function Testable() {
 /****
 * A TestItem receives a result from a Testable object and
 * runs one of more of its tests on it (reporting is done into the console);
-* The last function needs to be endTests() which will pass through the result, even if the test(s) failed
+* The last function needs to be endTests() which will pass through the result, even if the test(s) failed.
+* If a test is called within a looping function, the number of tests run can be reduced by adding an iteration limit.
+* This will stop the test results printing after that limit, but won't stop the function executing.
+* The iteration limit is added as the last parameter to the test function.
 ****/
 var TestItem = function(resultToTest) {
 	this.actual = resultToTest;
-	this.iterations = 0;
 
-	this.describe = function(description) {
-		this.log('\n**********\n' + description);
+	// iterations will be populated with the number of iterations for each test, like this
+	// {'expectToBe': 2, expectType: 1}
+	this.iterations = {};
+
+	/*
+	* Print out a description of the
+	*/
+	this.describe = function(description, iterationLimit) {
+		if (this.checkIterations('describe', iterationLimit)) {
+			this.log('\n____________________\n' + description);
+		}
 		return this;
 	}
 
 	this.expectToBe = function(expectedValue, iterationLimit) {
-		if (this.checkIterations(iterationLimit)) {
+		if (this.checkIterations('expectToBe', iterationLimit)) {
 			if (this.actual == expectedValue) {
 			this.log(this.passString + ' has the expected value:\n' + expectedValue);
 			} else {
@@ -50,56 +61,45 @@ var TestItem = function(resultToTest) {
 		return this;
 	}
 
-	/*
-	* Check to see whether the current number of iterations is less than the iterationLimit
-	* return true if it is, false if we have reached the iterationLimit
-	* or if no iterationLimit is given, return true, as any number of iterations is OK
-	*/
-	this.checkIterations = function(iterationLimit) {
-		if(iterationLimit) {
-			if (this.iterations <= iterationLimit) {
-				this.iterations++;
-				return true;
+	this.expectType = function(expectedType, iterationLimit) {
+		if (this.checkIterations('expectType', iterationLimit)) {
+			if (this.actual instanceof expectedType) {
+				this.log(this.passString + ' is an instance of the expected type\n');
 			} else {
-				this.iterations = 0;
-				return false;
+				this.log(this.failString + ' is NOT an instance of the expected type\n');
 			}
-		} else {
-			return true;
-		}
-	}
-
-	this.expectType = function(expectedType) {
-		if (this.actual instanceof expectedType) {
-			this.log(this.passString + ' is an instance of the expected type\n');
-		} else {
-			this.log(this.failString + ' is NOT an instance of the expected type\n');
 		}
 		return this;
 	}
 
-	this.expectContains = function(expectedValue) {
-		if (this.actual.indexOf(expectedValue) == -1) {
-			this.log(this.failString + ' does not contain the expected value:\n'
-				+ expectedValue + '\n');
-		} else {
-			this.log(this.passString + ' contains the expected value:\n' + expectedValue + '\n');
+	this.expectContains = function(expectedValue, iterationLimit) {
+		if (this.checkIterations('expectContains', iterationLimit)) {
+			if (this.actual.toString().indexOf(expectedValue) == -1) {
+				this.log(this.failString + ' does not contain the expected value:\n'
+					+ expectedValue + '\n');
+			} else {
+				this.log(this.passString + ' contains the expected value:\n' + expectedValue + '\n');
+			}
 		}
 		return this;
 	}
 
-	this.expectDoesNotContain = function(unexpectedValue) {
-		if (this.actual.indexOf(unexpectedValue) == -1) {
-			this.log(this.passString + ' did not contain the incorrect value:\n' + unexpectedValue + '\n');
-		} else {
-			this.log(this.failString + ' contained the unexpected value:\n'
-				+ unexpectedValue + '\n');
+	this.expectDoesNotContain = function(unexpectedValue, iterationLimit) {
+		if (this.checkIterations('expectDoesNotContain', iterationLimit)) {
+			if (this.actual.indexOf(unexpectedValue) == -1) {
+				this.log(this.passString + ' did not contain the incorrect value:\n' + unexpectedValue + '\n');
+			} else {
+				this.log(this.failString + ' contained the unexpected value:\n'
+					+ unexpectedValue + '\n');
+			}
 		}
 		return this;
 	}
 
-	this.printActual = function() {
-		this.log('\n Actual result is:\n' + this.actual.toString() + '\n');
+	this.printActual = function(iterationLimit) {
+		if (this.checkIterations('printActual', iterationLimit)) {
+			this.log('\n Actual result is:\n' + this.actual.toString() + '\n');
+		}
 		return this;
 	}
 
@@ -115,7 +115,41 @@ var TestItem = function(resultToTest) {
 	this.failString = '\n***FAIL: the actual result ';
 
 	this.endTests = function() {
-		this.log('**********\n');
 		return this.actual;
+	}
+
+	/*
+	* Check to see whether the current number of iterations is less than the iterationLimit
+	* return true if it is, false if we have reached the iterationLimit
+	* or if no iterationLimit is given, return true, as any number of iterations is OK
+	*/
+	this.checkIterations = function(testName, iterationLimit) {
+		if(iterationLimit) {
+			if (!this.iterations[testName]) {
+				this.iterations[testName] = 0;
+			}
+			if (this.iterations[testName] < iterationLimit) {
+				this.iterations++;
+				return true; // we have had less iterations than the iterationLimit, so we're OK to run the test again
+			} else {
+				return false; // we have reached the iterationLimit, so we can't run the test again
+			}
+		} else {
+			return true; //there's no iterationLimit so we can run as many tests as we like
+		}
+	}
+
+	/*
+	* reset the iteration number of the given test to 0...or if there is no testName given, reset all iteration numbers for all tests
+	*/
+	this.resetIterations = function(testName) {
+		var i;
+		if (testName) {
+			this.iterations[testName] = 0;
+		} else {
+			for (i in iterations) {
+				this.iterations[i] = 0;
+			}
+		}
 	}
 }

@@ -16,7 +16,11 @@ console.log('concatStrings result ' + tempTest.concatStrings('foo','bar').expect
 tempTest.addFunction('loopingFn', function() {
 	var i;
 	for(i=0; i<100; i++) {
-		tempTest.addNums(0,i).expectToBe(2,3).endTests();
+		tempTest.addNums(0,i)
+			.describe('testing iteration limit', 1)
+			.expectToBe(2,3)
+			.expectContains('This string is not in the answer', 5)
+			.endTests();
 	}
 });
 tempTest.loopingFn();
