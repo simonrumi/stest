@@ -35,8 +35,8 @@ var Testable = function Testable() {
 var TestItem = function(resultToTest) {
 	this.actual = resultToTest;
 
-	// iterations will be populated with the number of iterations for each test, like this
-	// {'expectToBe': 2, expectType: 1}
+	// this.iterations will be populated with the number of iterations for each test, like this
+	// {'expectToBe': 2, 'expectType': 1}
 	this.iterations = {};
 
 	/*
@@ -129,7 +129,7 @@ var TestItem = function(resultToTest) {
 				this.iterations[testName] = 0;
 			}
 			if (this.iterations[testName] < iterationLimit) {
-				this.iterations++;
+				this.iterations[testName]++;
 				return true; // we have had less iterations than the iterationLimit, so we're OK to run the test again
 			} else {
 				return false; // we have reached the iterationLimit, so we can't run the test again
