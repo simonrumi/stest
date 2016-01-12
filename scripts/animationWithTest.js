@@ -18,6 +18,10 @@ tempTest.addFunction('loopingFn', function() {
 	for(i=0; i<100; i++) {
 		tempTest.addNums(0,i)
 			.describe('testing iteration limit', 1)
+			.printActual(3)
+			.expectSomething(1)
+			.expectTrue(3)
+			.expectFalse(3)
 			.expectToBe(2,3)
 			.expectContains('This string is not in the answer', 5)
 			.endTests();

@@ -49,6 +49,39 @@ var TestItem = function(resultToTest) {
 		return this;
 	}
 
+	this.expectSomething = function(iterationLimit) {
+		if (this.checkIterations('expectSomething', iterationLimit)) {
+			if (this.actual == null || this.actual === '') {
+				this.log(this.failString + ' has no value\n');
+			} else {
+				this.log(this.passString + ' has some value\n');
+			}
+		}
+		return this;
+	}
+
+	this.expectTrue = function(iterationLimit) {
+		if (this.checkIterations('expectTrue', iterationLimit)) {
+			if (this.actual) {
+				this.log(this.passString + ' is true or has a truthy value\n');
+			} else {
+				this.log(this.failString + ' is false or has a falsey value\n');
+			}
+		}
+		return this;
+	}
+
+	this.expectFalse = function(iterationLimit) {
+		if (this.checkIterations('expectFalse', iterationLimit)) {
+			if (!this.actual) {
+				this.log(this.passString + ' is false or has a falsey value\n');
+			} else {
+				this.log(this.failString + ' is true or has a truthy value\n');
+			}
+		}
+		return this;
+	}
+
 	this.expectToBe = function(expectedValue, iterationLimit) {
 		if (this.checkIterations('expectToBe', iterationLimit)) {
 			if (this.actual == expectedValue) {
