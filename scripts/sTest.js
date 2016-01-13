@@ -1,6 +1,10 @@
 'use strict';
 
 var Testable = function Testable() {
+	/*
+	* wrap a function so that it runs but also passes the result to any number of tests
+	* via TestItem (see below)
+	*/
 	this.addFunction = function(functionName, functionObj) {
 		this[functionName] = function () {
 			var args = Array.prototype.slice.call(arguments, 0); //this turns arguments object into a regular Array, explanation here: https://shifteleven.com/articles/2007/06/28/array-like-objects-in-javascript/
@@ -40,17 +44,17 @@ var TestItem = function(resultToTest) {
 	this.iterations = {};
 
 	/*
-	* Print out a description of the
+	* Print out a description of the test(s)
 	*/
 	this.describe = function(description, iterationLimit) {
-		if (this.checkIterations('describe', iterationLimit)) {
+		if (this.testingOn && this.checkIterations('describe', iterationLimit)) {
 			this.log('\n____________________\n' + description);
 		}
 		return this;
 	}
 
 	this.expectSomething = function(iterationLimit) {
-		if (this.checkIterations('expectSomething', iterationLimit)) {
+		if (this.testingOn && this.checkIterations('expectSomething', iterationLimit)) {
 			if (this.actual == null || this.actual === '') {
 				this.log(this.failString + ' has no value\n');
 			} else {
@@ -61,7 +65,7 @@ var TestItem = function(resultToTest) {
 	}
 
 	this.expectTrue = function(iterationLimit) {
-		if (this.checkIterations('expectTrue', iterationLimit)) {
+		if (this.testingOn && this.checkIterations('expectTrue', iterationLimit)) {
 			if (this.actual) {
 				this.log(this.passString + ' is true or has a truthy value\n');
 			} else {
@@ -72,7 +76,7 @@ var TestItem = function(resultToTest) {
 	}
 
 	this.expectFalse = function(iterationLimit) {
-		if (this.checkIterations('expectFalse', iterationLimit)) {
+		if (this.testingOn && this.checkIterations('expectFalse', iterationLimit)) {
 			if (!this.actual) {
 				this.log(this.passString + ' is false or has a falsey value\n');
 			} else {
@@ -83,7 +87,7 @@ var TestItem = function(resultToTest) {
 	}
 
 	this.expectToBe = function(expectedValue, iterationLimit) {
-		if (this.checkIterations('expectToBe', iterationLimit)) {
+		if (this.testingOn && this.checkIterations('expectToBe', iterationLimit)) {
 			if (this.actual == expectedValue) {
 			this.log(this.passString + ' has the expected value:\n' + expectedValue);
 			} else {
@@ -95,7 +99,7 @@ var TestItem = function(resultToTest) {
 	}
 
 	this.expectType = function(expectedType, iterationLimit) {
-		if (this.checkIterations('expectType', iterationLimit)) {
+		if (this.testingOn && this.checkIterations('expectType', iterationLimit)) {
 			if (this.actual instanceof expectedType) {
 				this.log(this.passString + ' is an instance of the expected type\n');
 			} else {
@@ -106,7 +110,7 @@ var TestItem = function(resultToTest) {
 	}
 
 	this.expectContains = function(expectedValue, iterationLimit) {
-		if (this.checkIterations('expectContains', iterationLimit)) {
+		if (this.testingOn && this.checkIterations('expectContains', iterationLimit)) {
 			if (this.actual.toString().indexOf(expectedValue) == -1) {
 				this.log(this.failString + ' does not contain the expected value:\n'
 					+ expectedValue + '\n');
@@ -118,7 +122,7 @@ var TestItem = function(resultToTest) {
 	}
 
 	this.expectDoesNotContain = function(unexpectedValue, iterationLimit) {
-		if (this.checkIterations('expectDoesNotContain', iterationLimit)) {
+		if (this.testingOn && this.checkIterations('expectDoesNotContain', iterationLimit)) {
 			if (this.actual.indexOf(unexpectedValue) == -1) {
 				this.log(this.passString + ' did not contain the incorrect value:\n' + unexpectedValue + '\n');
 			} else {
@@ -130,19 +134,19 @@ var TestItem = function(resultToTest) {
 	}
 
 	this.printActual = function(iterationLimit) {
-		if (this.checkIterations('printActual', iterationLimit)) {
+		if (this.testingOn && this.checkIterations('printActual', iterationLimit)) {
 			this.log('\n Actual result is:\n' + this.actual.toString() + '\n');
 		}
 		return this;
 	}
 
 	this.log = function(message) {
-		if (this.loggingOn) {
+		if (this.testingOn) {
 			console.log(message);
 		}
 	}
 
-	this.loggingOn = true;
+	this.testingOn = true;
 
 	this.passString = '\nPass: the actual result ';
 	this.failString = '\n***FAIL: the actual result ';
