@@ -53,6 +53,93 @@ var TestItem = function(resultToTest) {
 		return this;
 	}
 
+	/*
+	* These are the individual tests that are to be run by the expect() function below
+	* Add any new tests in here
+	*/
+    this.tests = {
+    	'something': function(expectedValue, iterationLimit) {
+    		if (this.actual == null || this.actual === '') {
+				this.log(this.failString + ' has no value\n');
+			} else {
+				this.log(this.passString + ' has some value\n');
+			}
+    	},
+
+    	'true': function(expectedValue, iterationLimit) {
+    		if (this.actual) {
+				this.log(this.passString + ' is true or has a truthy value\n');
+			} else {
+				this.log(this.failString + ' is false or has a falsey value, whereas "true" was expected\n');
+			}
+    	},
+
+    	'false': function(expectedValue, iterationLimit) {
+    		if (!this.actual) {
+				this.log(this.passString + ' is false or has a falsey value\n');
+			} else {
+				this.log(this.failString + ' is true or has a truthy value, whereas "false" was expected\n');
+			}
+    	},
+
+    	'toBe': function(expectedValue, iterationLimit) {
+    		if (this.actual == expectedValue) {
+				this.log(this.passString + ' has the expected value:\n' + expectedValue);
+			} else {
+				this.log(this.failString + ' has the value:\n' + this.actual
+					+ '\n...but it was expected to be:\n' + expectedValue + '\n');
+			}
+    	},
+
+    	'type': function(expectedType, iterationLimit) {
+    		if (this.actual instanceof expectedType) {
+				this.log(this.passString + ' is an instance of the expected type\n');
+			} else {
+				this.log(this.failString + ' is NOT an instance of the expected type\n');
+			}
+    	},
+
+    	'contains': function(expectedValue, iterationLimit) {
+    		if (this.actual.toString().indexOf(expectedValue) == -1) {
+				this.log(this.failString + ' does not contain the expected value:\n'
+					+ expectedValue + '\n');
+			} else {
+				this.log(this.passString + ' contains the expected value:\n' + expectedValue + '\n');
+			}
+    	},
+
+    	'doesNotContain': function(unexpectedValue, iterationLimit) {
+    		if (this.actual.toString().indexOf(unexpectedValue) == -1) {
+				this.log(this.passString + ' did not contain the incorrect value:\n' + unexpectedValue + '\n');
+			} else {
+				this.log(this.failString + ' contained the unexpected value:\n'
+					+ unexpectedValue + '\n');
+			}
+    	}
+    };
+
+    /*
+    * expect is the function that runs the test of the given name
+    */
+    this.expect = function(testName, expectedValue, iterationLimit) {
+    	var functionObj;
+    	var args;
+    	if (this.testingOn) {
+            if (testName in this.tests) {
+                if (this.checkIterations(testName, iterationLimit)) {
+                	functionObj = this.tests[testName]; //using the testName as the key, we get back a function that runs a test
+                	args = Array.prototype.slice.call(arguments, 1); // the args to send to the test function don't include the testName which is in arguments[0]
+                	functionObj.apply(this,args); //now we run the test function, passing on the args which are expectedValue and iterationLimit
+                }
+            } else {
+                this.log('\n***Error: "' + testName + '" is not the name of a known test\n');
+            }
+        }
+        return this; // after having run the test, we return "this", which is the TestItem object, so that further tests can be run
+    }
+
+
+/*
 	this.expectSomething = function(iterationLimit) {
 		if (this.testingOn && this.checkIterations('expectSomething', iterationLimit)) {
 			if (this.actual == null || this.actual === '') {
@@ -132,6 +219,7 @@ var TestItem = function(resultToTest) {
 		}
 		return this;
 	}
+	*/
 
 	this.printActual = function(iterationLimit) {
 		if (this.testingOn && this.checkIterations('printActual', iterationLimit)) {

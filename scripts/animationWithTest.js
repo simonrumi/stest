@@ -1,35 +1,54 @@
 'use strict';
 
-//// temporary tests of the testing functions
+/*
+* First set of tests with simple functions start here
+*/
 var tempTest = new Testable();
 
 tempTest.addFunction('addNums', function(num1, num2) {
 	return num1 + num2;
 });
-console.log('addNums 1,2  = ' + tempTest.addNums(6,7).expectToBe(13).endTests());
+
+var fourPlusFive = tempTest.addNums(4,5)
+	.describe('Testing addNums(4,5)')
+	.expect('something')
+	.expect('true')
+	.expect('toBe', 9)
+	.expect('contains', 40)
+	.expect('contains', 9)
+	.expect('doesNotContain', 'a string')
+	.endTests();
 
 tempTest.addFunction('concatStrings', function(str1, str2) {
 	return str1.concat(str2);
 });
-console.log('concatStrings result ' + tempTest.concatStrings('foo','bar').expectContains('not this').expectToBe('foobar').endTests());
+
+var joinedStrings = tempTest.concatStrings('foo','bar')
+	.describe("Testing concatStrings('foo','bar')")
+	.expect('contains','not this')
+	.expect('toBe', 'foobar')
+	.endTests();
 
 tempTest.addFunction('loopingFn', function() {
 	var i;
 	for(i=0; i<100; i++) {
 		tempTest.addNums(0,i)
-			.describe('testing iteration limit', 1)
-			.printActual(3)
-			.expectSomething(1)
-			.expectTrue(3)
-			.expectFalse(3)
-			.expectToBe(2,3)
-			.expectContains('This string is not in the answer', 5)
+			.describe('Testing iteration limit', 1)
+			.printActual(3, 5)
+			.expect('something', null, 1)
+			.expect('true', null, 3)
+			.expect('false', null, 3)
+			.expect('toBe', 2, 3)
+			.expect('contains', 'This string is not in the answer', 5)
 			.endTests();
 	}
 });
 tempTest.loopingFn();
-//// end test
 
+
+/*
+* Testing of a more realistic set of functions, for displaying animated text, start here
+*/
 var animatedString = new Testable();
 
 animatedString.addFunction('putCharactersIntoDivs', function(containingElementId) {
@@ -77,15 +96,15 @@ $(window).load(function() {
 
 	animatedString.putCharactersIntoDivs(elementToAnimate)
 		.describe('Testing animatedString.putCharactersIntoDivs for the div ' + elementToAnimate)
-		.expectContains('<div id="char_0" class="animatable-text-div">a</div>')
-		.expectContains('<div id="char_1" class="animatable-text-div">')
-		.expectContains('<div id="char_16" class="animatable-text-div">t</div>')
-		.expectDoesNotContain('<div id="char_16" class="animatable-text-div">t</div>')
+		.expect('contains', '<div id="char_0" class="animatable-text-div">a</div>')
+		.expect('contains', '<div id="char_1" class="animatable-text-div">')
+		.expect('contains', '<div id="char_16" class="animatable-text-div">t</div>')
+		.expect('doesNotContain', '<div id="char_16" class="animatable-text-div">t</div>')
 		.endTests();
 
 	var timeline = animatedString.prepareAnimTimeline(elementToAnimate)
 		.describe('Testing animatedString.prepareAnimTimeline')
-		.expectType(TimelineLite)
+		.expect('type', TimelineLite)
 		.printActual()
 		.endTests();
 
