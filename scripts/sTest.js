@@ -66,13 +66,17 @@ var TestItem = function(resultToTest) {
 			}
     	},
 
-    	'true': function(expectedValue, iterationLimit) {
-    		if (this.actual) {
-				this.log(this.passString + ' is true or has a truthy value\n');
-			} else {
-				this.log(this.failString + ' is false or has a falsey value, whereas "true" was expected\n');
-			}
-    	},
+    	// QQQQQ this is the new way to do things, so need to make rest of functions set up like this
+    	'true': {
+    		'args': ['iterationLimit'],
+    		'func': function() {
+	    		if (this.actual) {
+					this.log(this.passString + ' is true or has a truthy value\n');
+				} else {
+					this.log(this.failString + ' is false or has a falsey value, whereas "true" was expected\n');
+				}
+	    	},
+	    },
 
     	'false': function(expectedValue, iterationLimit) {
     		if (!this.actual) {
@@ -126,7 +130,15 @@ var TestItem = function(resultToTest) {
     	var args;
     	if (this.testingOn) {
             if (testName in this.tests) {
-                if (this.checkIterations(testName, iterationLimit)) {
+            	// QQQQQ this is the new way to do things, so need to make rest of functions set up like this
+            	if (testName === 'true') {
+            		iterationLimit = this.getIterationLimit(testName, arguments);
+            		if (this.checkIterations(testName, iterationLimit)) {
+            			functionObj = this.tests[testName].func; // using the testName as the key, we get back a function that runs a test
+						args = Array.prototype.slice.call(arguments, 1); // the args to send to the test function don't include the testName which is in arguments[0]
+						functionObj.apply(this,args);
+            		}
+            	} else if (this.checkIterations(testName, iterationLimit)) {
                 	functionObj = this.tests[testName]; //using the testName as the key, we get back a function that runs a test
                 	args = Array.prototype.slice.call(arguments, 1); // the args to send to the test function don't include the testName which is in arguments[0]
                 	functionObj.apply(this,args); //now we run the test function, passing on the args which are expectedValue and iterationLimit
@@ -138,89 +150,15 @@ var TestItem = function(resultToTest) {
         return this; // after having run the test, we return "this", which is the TestItem object, so that further tests can be run
     }
 
+    this.getIterationLimit = function(testName, argumentList) {
+    	var testObj = this.tests[testName];
+    	var lastArgumentIndex = testObj.args.length - 1;
+    	return argumentList[lastArgumentIndex];
+    }
 
-/*
-	this.expectSomething = function(iterationLimit) {
-		if (this.testingOn && this.checkIterations('expectSomething', iterationLimit)) {
-			if (this.actual == null || this.actual === '') {
-				this.log(this.failString + ' has no value\n');
-			} else {
-				this.log(this.passString + ' has some value\n');
-			}
-		}
-		return this;
-	}
-
-	this.expectTrue = function(iterationLimit) {
-		if (this.testingOn && this.checkIterations('expectTrue', iterationLimit)) {
-			if (this.actual) {
-				this.log(this.passString + ' is true or has a truthy value\n');
-			} else {
-				this.log(this.failString + ' is false or has a falsey value\n');
-			}
-		}
-		return this;
-	}
-
-	this.expectFalse = function(iterationLimit) {
-		if (this.testingOn && this.checkIterations('expectFalse', iterationLimit)) {
-			if (!this.actual) {
-				this.log(this.passString + ' is false or has a falsey value\n');
-			} else {
-				this.log(this.failString + ' is true or has a truthy value\n');
-			}
-		}
-		return this;
-	}
-
-	this.expectToBe = function(expectedValue, iterationLimit) {
-		if (this.testingOn && this.checkIterations('expectToBe', iterationLimit)) {
-			if (this.actual == expectedValue) {
-			this.log(this.passString + ' has the expected value:\n' + expectedValue);
-			} else {
-				this.log(this.failString + ' has the value:\n' + this.actual
-					+ '\n...but it was expected to be:\n' + expectedValue + '\n');
-			}
-		}
-		return this;
-	}
-
-	this.expectType = function(expectedType, iterationLimit) {
-		if (this.testingOn && this.checkIterations('expectType', iterationLimit)) {
-			if (this.actual instanceof expectedType) {
-				this.log(this.passString + ' is an instance of the expected type\n');
-			} else {
-				this.log(this.failString + ' is NOT an instance of the expected type\n');
-			}
-		}
-		return this;
-	}
-
-	this.expectContains = function(expectedValue, iterationLimit) {
-		if (this.testingOn && this.checkIterations('expectContains', iterationLimit)) {
-			if (this.actual.toString().indexOf(expectedValue) == -1) {
-				this.log(this.failString + ' does not contain the expected value:\n'
-					+ expectedValue + '\n');
-			} else {
-				this.log(this.passString + ' contains the expected value:\n' + expectedValue + '\n');
-			}
-		}
-		return this;
-	}
-
-	this.expectDoesNotContain = function(unexpectedValue, iterationLimit) {
-		if (this.testingOn && this.checkIterations('expectDoesNotContain', iterationLimit)) {
-			if (this.actual.indexOf(unexpectedValue) == -1) {
-				this.log(this.passString + ' did not contain the incorrect value:\n' + unexpectedValue + '\n');
-			} else {
-				this.log(this.failString + ' contained the unexpected value:\n'
-					+ unexpectedValue + '\n');
-			}
-		}
-		return this;
-	}
-	*/
-
+    /*
+    * printActual simply prints out the value that is being tested
+    */
 	this.printActual = function(iterationLimit) {
 		if (this.testingOn && this.checkIterations('printActual', iterationLimit)) {
 			this.log('\n Actual result is:\n' + this.actual.toString() + '\n');
@@ -228,6 +166,9 @@ var TestItem = function(resultToTest) {
 		return this;
 	}
 
+	/*
+	* log just logs to the console - it's expected that this is only for internal use by TestItem
+	*/
 	this.log = function(message) {
 		if (this.testingOn) {
 			console.log(message);
@@ -244,8 +185,10 @@ var TestItem = function(resultToTest) {
 	}
 
 	/*
-	* Check to see whether the current number of iterations is less than the iterationLimit
-	* return true if it is, false if we have reached the iterationLimit
+	* checkIterations is for internal use by TestItem for use in limiting the number of times
+	* a test is run.
+	* It checks to see whether the current number of iterations is less than the iterationLimit,
+	* returns true if it is, false if we have reached the iterationLimit,
 	* or if no iterationLimit is given, return true, as any number of iterations is OK
 	*/
 	this.checkIterations = function(testName, iterationLimit) {
