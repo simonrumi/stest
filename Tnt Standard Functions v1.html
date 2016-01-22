@@ -1,7 +1,35 @@
-'use strict';
+<script type="text/javascript">
+/***********************************
+ ** DO NOT CHANGE THIS CODE - V1.0 -
+ ** Campaign Name: ${campaign.name}
+ ** Recipe Name: ${campaign.recipe.name}
+ ** Campaign ID: ${campaign.id}
+ ** Recipe ID: ${campaign.recipe.id}
+ ** Mbox PCID: ${user.pcId}
+ ************************************
+ */
+
+ document.addEventListener("DOMContentLoaded", function(event) {
+	var mainOfferCode = new Testable();
+
+	mainOfferCode.addFunction('findName', function() {
+		tntFunctions.getNameFromCustomerDashboard()
+			.describe('in findName(), testing getNameFromCustomerDashboard()')
+			.expect('something')
+			.printActual()
+			.endTests();
+	});
+
+	//mainOfferCode.findName().endTests();
+
+	tntFunctions.runOfferCode(mainOfferCode) // .findName
+		.describe('Testing running mainOfferCode.')
+		.printActual()
+		.endTests();
+});
 
 /*******************************************************************************************
-* Testable framework
+* Testable framework starts here. Don't edit this unless you've specifically received permission to do so.
 ********************************************************************************************/
 /**
 * @class Testable
@@ -262,20 +290,20 @@ TestItem.prototype.endTests = function() {
 * @param iterationLimit The max number of iterations allowed for running the current test
 */
 TestItem.prototype.checkIterations = function(testName, iterationLimit) {
-	if(iterationLimit) {
-		if (!this.iterations[testName]) {
-			this.iterations[testName] = 0;
-		}
-		if (this.iterations[testName] < iterationLimit) {
-			this.iterations[testName]++;
-			return true; // we have had less iterations than the iterationLimit, so we're OK to run the test again
+		if(iterationLimit) {
+			if (!this.iterations[testName]) {
+				this.iterations[testName] = 0;
+			}
+			if (this.iterations[testName] < iterationLimit) {
+				this.iterations[testName]++;
+				return true; // we have had less iterations than the iterationLimit, so we're OK to run the test again
+			} else {
+				return false; // we have reached the iterationLimit, so we can't run the test again
+			}
 		} else {
-			return false; // we have reached the iterationLimit, so we can't run the test again
+			return true; //there's no iterationLimit so we can run as many tests as we like
 		}
-	} else {
-		return true; //there's no iterationLimit so we can run as many tests as we like
 	}
-}
 
 /**
 * @method resetIterations Resets the iteration number of the given test to 0...or if there is no testName given, reset all iteration numbers for all tests
@@ -291,3 +319,114 @@ TestItem.prototype.resetIterations = function(testName) {
 		}
 	}
 }
+
+
+/*******************************************************************************************
+* Standard Functions start here
+*/
+
+var tntFunctions = new Testable();
+
+// set this to false to turn off stand in mode checking; should be true in production
+tntFunctions._standinModeCheckOn = true;
+
+/**
+* @method runOfferCode runs the given function after checking whether the system is in stand-in-mode (provided that the stand-in-mode check is On)
+* @param offerCode The function to run
+* @return A string describing what happened, i.e. whether the offer code was run or not and whether stand-in-mode was checked first, or whether there was an error
+*/
+tntFunctions.addFunction('runOfferCode', function (offerCode) {
+	var stndinmode;
+	var args;
+	var functionToRun;
+	var argumentsForFunction;
+	var okToRun = false;
+	var reportString = '';
+
+	if (tntFunctions._standinModeCheckOn) {
+		stndinmode = tntFunctions.getElement('#divStandInModeError')
+			.describe('getting stand-in-mode element')
+			.expect('something')
+			.printActual()
+			.endTests();
+		if (stndinmode.className.indexOf('hide') != -1) {
+			okToRun = true;
+			reportString = 'Checked standin mode, ran offer code';
+		} else {
+			mboxDefine("clicktrack", "Standinmode_custdash");
+			mboxUpdate("Standinmode_custdash");
+			okToRun = false;
+			reportString = 'Checked standin mode, did not run offer code';
+		}
+	} else {
+		okToRun = true;
+		reportString = 'Did not check standin mode, ran offer code';
+	}
+
+	if (okToRun) {
+		try {
+			args = Array.prototype.slice.call(arguments, 0); //this turns arguments object (that has the arguments passed into the function) into a regular Array, explanation here: https://shifteleven.com/articles/2007/06/28/array-like-objects-in-javascript/
+			functionToRun = args[0];
+			argumentsForFunction = args.slice(1);
+			functionToRun.apply(this, argumentsForFunction);
+		} catch (error) {
+			reportString = TestItem.prototype.errorString + error.message;
+		}
+	}
+
+	return reportString;
+});
+
+/*
+* getElement - given an html element id or class, which must start with a "#" or a "." - return that element.
+* Optionally, for classes, since there will potentially be an array of elements,
+* specify which one you want, with 0 being the first element in the array
+* if no elementIndex is given, the first element in the array will be returned
+*/
+tntFunctions.addFunction('getElement', function (elementIdentifier, elementIndex) {
+	var htmlElement;
+	var htmlElementArr;
+	var regex;
+
+	// if the elementIdentifier starts with a '#' then we're dealing with an id
+	if (elementIdentifier.indexOf('#') == 0) {
+		htmlElement = document.getElementById(elementIdentifier.slice(1));
+	}
+
+	// if the elementIdentifier starts with a "." then we have one or more classes
+	if (elementIdentifier.indexOf('.') == 0) {
+		regex = /\./g; // find all the periods in the string
+		elementIdentifier = elementIdentifier.replace(regex, ' '); // replace the periods with a space, e.g. change ".myclass.yourclass" to " myclass yourclass"
+		htmlElementArr = document.getElementsByClassName(elementIdentifier.slice(1));
+		if (htmlElementArr.length > 0) {
+			if (elementIndex) {
+				htmlElement = htmlElementArr[elementIndex];
+			} else {
+				htmlElement = htmlElementArr[0];
+			}
+		}
+	}
+	return htmlElement;
+});
+
+tntFunctions.addFunction('isElementVisible', function (element) {
+	// TODO write this
+});
+
+tntFunctions.addFunction('getNameFromCustomerDashboard',  function() {
+	// this gets us a phrase like "Hi, helen" from the widget at the top of the page with that text on it
+	var welcomeDiv = tntFunctions.getElement('.usbMenu-a.CDWelcomeNameLabel.breakword')
+		.describe('In getNameFromCustomerDashboard(), Testing getting the welcome Div')
+		.expect('something')
+		.endTests();
+	var welcomeText = welcomeDiv.text;
+	var name = welcomeText.match(/hi, (.*)$/i)[1]; //the element at index 1 is the text captured in parentheses by the regex
+
+	// convert to title case e.g. "Helen" instead of "helen"
+	name = name.charAt(0).toUpperCase() + name.substr(1).toLowerCase();
+	return name;
+});
+
+
+//# sourceURL=tntFunctions.js
+</script>

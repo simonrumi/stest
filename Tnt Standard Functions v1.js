@@ -1,7 +1,5 @@
-'use strict';
-
 /*******************************************************************************************
-* Testable framework
+* Testable framework starts here. Don't edit this unless you've specifically received permission to do so.
 ********************************************************************************************/
 /**
 * @class Testable
@@ -262,20 +260,20 @@ TestItem.prototype.endTests = function() {
 * @param iterationLimit The max number of iterations allowed for running the current test
 */
 TestItem.prototype.checkIterations = function(testName, iterationLimit) {
-	if(iterationLimit) {
-		if (!this.iterations[testName]) {
-			this.iterations[testName] = 0;
-		}
-		if (this.iterations[testName] < iterationLimit) {
-			this.iterations[testName]++;
-			return true; // we have had less iterations than the iterationLimit, so we're OK to run the test again
+		if(iterationLimit) {
+			if (!this.iterations[testName]) {
+				this.iterations[testName] = 0;
+			}
+			if (this.iterations[testName] < iterationLimit) {
+				this.iterations[testName]++;
+				return true; // we have had less iterations than the iterationLimit, so we're OK to run the test again
+			} else {
+				return false; // we have reached the iterationLimit, so we can't run the test again
+			}
 		} else {
-			return false; // we have reached the iterationLimit, so we can't run the test again
+			return true; //there's no iterationLimit so we can run as many tests as we like
 		}
-	} else {
-		return true; //there's no iterationLimit so we can run as many tests as we like
 	}
-}
 
 /**
 * @method resetIterations Resets the iteration number of the given test to 0...or if there is no testName given, reset all iteration numbers for all tests

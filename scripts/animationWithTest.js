@@ -34,11 +34,11 @@ tempTest.addFunction('loopingFn', function() {
 	for(i=0; i<100; i++) {
 		tempTest.addNums(0,i)
 			.describe('Testing iteration limit', 1)
-			.describe('Start of iteration',5)
+			.describe('Start Iteration', 6)
 			.printActual(3, 5)
-			.expect('something', null, 1)
+			.expect('something', 1)
 			.expect('true', 3)
-			.expect('false', null, 3)
+			.expect('false', 3)
 			.expect('toBe', 2, 3)
 			.expect('contains', 'This string is not in the answer', 5)
 			.endTests();
