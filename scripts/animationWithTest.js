@@ -5,9 +5,17 @@
 */
 var tempTest = new Testable();
 
+tempTest.setTestingOn(true);
+
 tempTest.addFunction('addNums', function(num1, num2) {
 	return num1 + num2;
 });
+
+tempTest.addFunction('concatStrings', function(str1, str2) {
+	return str1.concat(str2);
+});
+
+tempTest.setTestingOn(false, 'addNums');
 
 var fourPlusFive = tempTest.addNums(4,5)
 	.describe('Testing addNums(4,5)')
@@ -19,9 +27,7 @@ var fourPlusFive = tempTest.addNums(4,5)
 	.expect('doesNotContain', 'a string')
 	.endTests();
 
-tempTest.addFunction('concatStrings', function(str1, str2) {
-	return str1.concat(str2);
-});
+
 
 var joinedStrings = tempTest.concatStrings('foo','bar')
 	.describe("Testing concatStrings('foo','bar')")
