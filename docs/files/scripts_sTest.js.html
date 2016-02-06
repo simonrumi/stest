@@ -1,4 +1,87 @@
-'use strict';
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>scripts\sTest.js</title>
+    <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
+    <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
+    <link rel="icon" href="../assets/favicon.ico">
+    <script src="http://yui.yahooapis.com/combo?3.9.1/build/yui/yui-min.js"></script>
+</head>
+<body class="yui3-skin-sam">
+
+<div id="doc">
+    <div id="hd" class="yui3-g header">
+        <div class="yui3-u-3-4">
+                <h1><img src="../assets/css/logo.png" title="" width="117" height="52"></h1>
+        </div>
+        <div class="yui3-u-1-4 version">
+            <em>API Docs for: </em>
+        </div>
+    </div>
+    <div id="bd" class="yui3-g">
+
+        <div class="yui3-u-1-4">
+            <div id="docs-sidebar" class="sidebar apidocs">
+                <div id="api-list">
+                    <h2 class="off-left">APIs</h2>
+                    <div id="api-tabview" class="tabview">
+                        <ul class="tabs">
+                            <li><a href="#api-classes">Classes</a></li>
+                            <li><a href="#api-modules">Modules</a></li>
+                        </ul>
+                
+                        <div id="api-tabview-filter">
+                            <input type="search" id="api-filter" placeholder="Type to filter APIs">
+                        </div>
+                
+                        <div id="api-tabview-panel">
+                            <ul id="api-classes" class="apis classes">
+                                <li><a href="../classes/Testable.html">Testable</a></li>
+                                <li><a href="../classes/TestItem.html">TestItem</a></li>
+                            </ul>
+                
+                            <ul id="api-modules" class="apis modules">
+                                <li><a href="../modules/STest.html">STest</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="yui3-u-3-4">
+                <div id="api-options">
+                    Show:
+                    <label for="api-show-inherited">
+                        <input type="checkbox" id="api-show-inherited" checked>
+                        Inherited
+                    </label>
+            
+                    <label for="api-show-protected">
+                        <input type="checkbox" id="api-show-protected">
+                        Protected
+                    </label>
+            
+                    <label for="api-show-private">
+                        <input type="checkbox" id="api-show-private">
+                        Private
+                    </label>
+                    <label for="api-show-deprecated">
+                        <input type="checkbox" id="api-show-deprecated">
+                        Deprecated
+                    </label>
+            
+                </div>
+            
+            <div class="apidocs">
+                <div id="docs-main">
+                    <div class="content">
+<h1 class="file-heading">File: scripts\sTest.js</h1>
+
+<div class="file">
+    <pre class="code prettyprint linenums">
+&#x27;use strict&#x27;;
 
 /**
 * @example
@@ -6,7 +89,7 @@
 *
 * 	var myTestableObj = new Testable();
 *
-* 	myTestableObj.addFunction('addNums', function(num1, num2) {
+* 	myTestableObj.addFunction(&#x27;addNums&#x27;, function(num1, num2) {
 * 		// write your function as usual here
 * 		return num1 + num2;
 * 	});
@@ -14,9 +97,9 @@
 * use the function with tests in-line like this:
 *
 * 	var fourPlusFive = myTestableObj.addNums(4,5)
-*		.describe('Testing addNums(4,5)')
-*		.expect('something')
-*		.expect('toBe', 9)
+*		.describe(&#x27;Testing addNums(4,5)&#x27;)
+*		.expect(&#x27;something&#x27;)
+*		.expect(&#x27;toBe&#x27;, 9)
 *		.endTests();
 *
 * note that you always have to end with endTests(), even if you ran no tests, in order to return the value output by the function
@@ -108,7 +191,7 @@ Testable.prototype.setTestingOn = function(testingOn, functionName) {
 * It is expected to be given a result from a Testable object and to run one or more of its tests on it. Reporting is printed to the console;
 * The last function called needs to be endTests() which will pass through the result, even if the test(s) failed.
 * If a test is called within a looping function, the number of tests run can be reduced by adding an iteration limit.
-* This will stop the test results printing after that limit, but won't stop the function executing.
+* This will stop the test results printing after that limit, but won&#x27;t stop the function executing.
 * The iteration limit is added as the last parameter to the test function.
 *
 * @class TestItem
@@ -121,7 +204,7 @@ var TestItem = function(resultToTest, testingOn) {
 	this.testingOn = testingOn;
 
 	// this.iterations will be populated with the number of iterations for each test, like this
-	// {'toBe': 2, 'type': 1, etc}
+	// {&#x27;toBe&#x27;: 2, &#x27;type&#x27;: 1, etc}
 	this.iterations = {};
 };
 
@@ -132,8 +215,8 @@ var TestItem = function(resultToTest, testingOn) {
 * @return This TestItem (to be passed to other tests)
 */
 TestItem.prototype.describe = function(description, iterationLimit) {
-	if (this.testingOn && this.checkIterations('describe', iterationLimit)) {
-		this.log('\n____________________\n' + description);
+	if (this.testingOn &amp;&amp; this.checkIterations(&#x27;describe&#x27;, iterationLimit)) {
+		this.log(&#x27;\n____________________\n&#x27; + description);
 	}
 	return this;
 };
@@ -141,7 +224,7 @@ TestItem.prototype.describe = function(description, iterationLimit) {
 /**
 * An object that contains functions which are the individual tests that are to be run, in turn, by the expect() function
 * Any new tests needed should be coded in here.
-* Note that the name 'iterationLimit' is a special name and should not be varied
+* Note that the name &#x27;iterationLimit&#x27; is a special name and should not be varied
 *
 * See the Attributes section for a listing of all the tests
 *
@@ -155,19 +238,19 @@ TestItem.prototype.tests = {
 	*
 	* @example
 	* 	var fourPlusFive = myTestableObj.addNums(4,5)
-	*		.describe('Testing addNums(4,5)')
-	*		.expect('something')
+	*		.describe(&#x27;Testing addNums(4,5)&#x27;)
+	*		.expect(&#x27;something&#x27;)
 	*		.endTests();
 	*
 	* @attribute something
 	*/
-	'something': {
-	args: ['iterationLimit'],
+	&#x27;something&#x27;: {
+	args: [&#x27;iterationLimit&#x27;],
 	func: function() {
-			if (this.actual == null || this.actual === '') {
-				this.log(this.failString + ' has no value\n');
+			if (this.actual == null || this.actual === &#x27;&#x27;) {
+				this.log(this.failString + &#x27; has no value\n&#x27;);
 			} else {
-				this.log(this.passString + ' has some value\n');
+				this.log(this.passString + &#x27; has some value\n&#x27;);
 			}
 		},
 	},
@@ -177,19 +260,19 @@ TestItem.prototype.tests = {
 	*
 	* @example
 	* 	var isCorrect = myTestableObj.checkForCorrectness(myValue)
-	*		.describe('Testing checkForCorrectness()')
-	*		.expect('true')
+	*		.describe(&#x27;Testing checkForCorrectness()&#x27;)
+	*		.expect(&#x27;true&#x27;)
 	*		.endTests();
 	*
 	* @attribute true
 	*/
-	'true': {
-		args: ['iterationLimit'],
+	&#x27;true&#x27;: {
+		args: [&#x27;iterationLimit&#x27;],
 		func: function() {
 			if (this.actual) {
-				this.log(this.passString + ' is true or has a truthy value\n');
+				this.log(this.passString + &#x27; is true or has a truthy value\n&#x27;);
 			} else {
-				this.log(this.failString + ' is false or has a falsey value, whereas "true" was expected\n');
+				this.log(this.failString + &#x27; is false or has a falsey value, whereas &quot;true&quot; was expected\n&#x27;);
 			}
 		},
 	},
@@ -199,19 +282,19 @@ TestItem.prototype.tests = {
 	*
 	* @example
 	* 	var isNotCorrect = myTestableObj.checkForIncorrectness(myValue)
-	*		.describe('Testing checkForIncorrectness()')
-	*		.expect('false')
+	*		.describe(&#x27;Testing checkForIncorrectness()&#x27;)
+	*		.expect(&#x27;false&#x27;)
 	*		.endTests();
 	*
 	* @attribute false
 	*/
-	'false': {
-		args: ['iterationLimit'],
+	&#x27;false&#x27;: {
+		args: [&#x27;iterationLimit&#x27;],
 		func: function() {
 			if (!this.actual) {
-				this.log(this.passString + ' is false or has a falsey value\n');
+				this.log(this.passString + &#x27; is false or has a falsey value\n&#x27;);
 			} else {
-				this.log(this.failString + ' is true or has a truthy value, whereas "false" was expected\n');
+				this.log(this.failString + &#x27; is true or has a truthy value, whereas &quot;false&quot; was expected\n&#x27;);
 			}
 		},
 	},
@@ -221,20 +304,20 @@ TestItem.prototype.tests = {
 	*
 	* @example
 	* 	var mySum = myTestableObj.addNums(4,5)
-	*		.describe('Testing addNums(4,5)')
-	*		.expect('toBe', 9)
+	*		.describe(&#x27;Testing addNums(4,5)&#x27;)
+	*		.expect(&#x27;toBe&#x27;, 9)
 	*		.endTests();
 	*
 	* @attribute toBe
 	*/
-	'toBe': {
-		args: ['expectedValue', 'iterationLimit'],
+	&#x27;toBe&#x27;: {
+		args: [&#x27;expectedValue&#x27;, &#x27;iterationLimit&#x27;],
 		func: function(expectedValue, iterationLimit) {
 			if (this.actual == expectedValue) {
-				this.log(this.passString + ' has the expected value:\n' + expectedValue);
+				this.log(this.passString + &#x27; has the expected value:\n&#x27; + expectedValue);
 			} else {
-				this.log(this.failString + ' has the value:\n' + this.actual
-					+ '\n...but it was expected to be:\n' + expectedValue + '\n');
+				this.log(this.failString + &#x27; has the value:\n&#x27; + this.actual
+					+ &#x27;\n...but it was expected to be:\n&#x27; + expectedValue + &#x27;\n&#x27;);
 			}
 		},
 	},
@@ -244,19 +327,19 @@ TestItem.prototype.tests = {
 	*
 	* @example
 	* 	var myCar = myTestableObj.getCarObj()
-	*		.describe('Testing getCarObj()')
-	*		.expect('type', Car)
+	*		.describe(&#x27;Testing getCarObj()&#x27;)
+	*		.expect(&#x27;type&#x27;, Car)
 	*		.endTests();
 	*
 	* @attribute type
 	*/
-	'type': {
-		args: ['expectedType', 'iterationLimit'],
+	&#x27;type&#x27;: {
+		args: [&#x27;expectedType&#x27;, &#x27;iterationLimit&#x27;],
 		func: function(expectedType, iterationLimit) {
 			if (this.actual instanceof expectedType) {
-				this.log(this.passString + ' is an instance of the expected type\n');
+				this.log(this.passString + &#x27; is an instance of the expected type\n&#x27;);
 			} else {
-				this.log(this.failString + ' is NOT an instance of the expected type\n');
+				this.log(this.failString + &#x27; is NOT an instance of the expected type\n&#x27;);
 			}
 		},
 	},
@@ -267,23 +350,23 @@ TestItem.prototype.tests = {
 	* Logs a FAIL otherwise
 	*
 	* @example
-	* 	var myDiv = myTestableObj.getContainerDiv('#container')
-	*		.describe('Attempting to get the div with the id #container')
-	*		.expect('htmlElement', HTMLDivElement)
+	* 	var myDiv = myTestableObj.getContainerDiv(&#x27;#container&#x27;)
+	*		.describe(&#x27;Attempting to get the div with the id #container&#x27;)
+	*		.expect(&#x27;htmlElement&#x27;, HTMLDivElement)
 	*		.endTests();
 	*
 	* @attribute htmlElement
 	*/
-	'htmlElement': {
-		args: ['expectedType', 'iterationLimit'],
+	&#x27;htmlElement&#x27;: {
+		args: [&#x27;expectedType&#x27;, &#x27;iterationLimit&#x27;],
 		func: function(expectedType, iterationLimit) {
 			if (!expectedType) {
 				expectedType = HTMLElement;
 			}
 			if (this.actual instanceof expectedType) {
-				this.log(this.passString + ' is an HTML element of the type ' + expectedType.name + '\n');
+				this.log(this.passString + &#x27; is an HTML element of the type &#x27; + expectedType.name + &#x27;\n&#x27;);
 			} else {
-				this.log(this.failString + ' is NOT an HTML element of the type ' + expectedType.name + '\n');
+				this.log(this.failString + &#x27; is NOT an HTML element of the type &#x27; + expectedType.name + &#x27;\n&#x27;);
 			}
 		},
 	},
@@ -294,20 +377,20 @@ TestItem.prototype.tests = {
 	*
 	* @example
 	* 	var fullName = myTestableObj.getFullName()
-	*		.describe("Getting Bob's full name")
-	*		.expect('contains', 'Bob')
+	*		.describe(&quot;Getting Bob&#x27;s full name&quot;)
+	*		.expect(&#x27;contains&#x27;, &#x27;Bob&#x27;)
 	*		.endTests();
 	*
 	* @attribute contains
 	*/
-	'contains': {
-		args: ['expectedValue', 'iterationLimit'],
+	&#x27;contains&#x27;: {
+		args: [&#x27;expectedValue&#x27;, &#x27;iterationLimit&#x27;],
 		func: function(expectedValue, iterationLimit) {
 			if (this.actual.toString().indexOf(expectedValue) == -1) {
-				this.log(this.failString + ' does not contain the expected value:\n'
-					+ expectedValue + '\n');
+				this.log(this.failString + &#x27; does not contain the expected value:\n&#x27;
+					+ expectedValue + &#x27;\n&#x27;);
 			} else {
-				this.log(this.passString + ' contains the expected value:\n' + expectedValue + '\n');
+				this.log(this.passString + &#x27; contains the expected value:\n&#x27; + expectedValue + &#x27;\n&#x27;);
 			}
 		},
 	},
@@ -318,19 +401,19 @@ TestItem.prototype.tests = {
 	*
 	* @example
 	* 	var fullName = myTestableObj.getFullName()
-	*		.describe('Getting the full name of someone other than Mary')
-	*		.expect('doesNotContain', 'Mary')
+	*		.describe(&#x27;Getting the full name of someone other than Mary&#x27;)
+	*		.expect(&#x27;doesNotContain&#x27;, &#x27;Mary&#x27;)
 	*		.endTests();
 	*
 	* @attribute contains
 	*/
-	'doesNotContain': {
-		args: ['unexpectedValue', 'iterationLimit'],
+	&#x27;doesNotContain&#x27;: {
+		args: [&#x27;unexpectedValue&#x27;, &#x27;iterationLimit&#x27;],
 		func: function(unexpectedValue, iterationLimit) {
 			if (this.actual.toString().indexOf(unexpectedValue) == -1) {
-				this.log(this.passString + ' did not contain the incorrect value:\n' + unexpectedValue + '\n');
+				this.log(this.passString + &#x27; did not contain the incorrect value:\n&#x27; + unexpectedValue + &#x27;\n&#x27;);
 			} else {
-				this.log(this.failString + ' contained the unexpected value:\n' + unexpectedValue + '\n');
+				this.log(this.failString + &#x27; contained the unexpected value:\n&#x27; + unexpectedValue + &#x27;\n&#x27;);
 			}
 		},
 	},
@@ -342,7 +425,7 @@ TestItem.prototype.tests = {
 * @method expect
 * @param testName The name of the test
 * @param expectedValue [optional - needed for some tests but not others] The expected value to test the actual value against
-* @param iterationLimit [optional] The maximum number of times to run this particular test. Once over the maximum the test won't be run. If not given, then the maximum is infinite.
+* @param iterationLimit [optional] The maximum number of times to run this particular test. Once over the maximum the test won&#x27;t be run. If not given, then the maximum is infinite.
 * @return This TestItem (to be passed to other tests)
 */
 TestItem.prototype.expect = function(testName, expectedValue, iterationLimit) {
@@ -350,17 +433,17 @@ TestItem.prototype.expect = function(testName, expectedValue, iterationLimit) {
 	var args;
 	if (this.testingOn) {
 		if (testName in this.tests) {
-			args = Array.prototype.slice.call(arguments, 1); // the args to send to the test function don't include the testName which is in arguments[0]
+			args = Array.prototype.slice.call(arguments, 1); // the args to send to the test function don&#x27;t include the testName which is in arguments[0]
 			iterationLimit = this.getIterationLimit(testName, args);
 			if (this.checkIterations(testName, iterationLimit)) {
 				testingFunction = this.tests[testName].func; //using the testName as the key, we get back a function that runs that test
 				testingFunction.apply(this,args); //now we run the test function, passing on the args (but without the testName included)
 			}
 		} else {
-			this.log('\n***Error: "' + testName + '" is not the name of a known test\n');
+			this.log(&#x27;\n***Error: &quot;&#x27; + testName + &#x27;&quot; is not the name of a known test\n&#x27;);
 		}
 	}
-	return this; // after having run the test, we return "this", which is the TestItem object, so that further tests can be run
+	return this; // after having run the test, we return &quot;this&quot;, which is the TestItem object, so that further tests can be run
 }
 
 /**
@@ -371,7 +454,7 @@ TestItem.prototype.expect = function(testName, expectedValue, iterationLimit) {
 */
 TestItem.prototype.getIterationLimit = function(testName, argArray) {
 	var testArgs = this.tests[testName].args;
-	var iterationLimitIndex = testArgs.indexOf('iterationLimit');
+	var iterationLimitIndex = testArgs.indexOf(&#x27;iterationLimit&#x27;);
 	return argArray[iterationLimitIndex];
 }
 
@@ -382,8 +465,8 @@ TestItem.prototype.getIterationLimit = function(testName, argArray) {
 * @return This TestItem (to be passed to other tests)
 */
 TestItem.prototype.printActual = function(iterationLimit) {
-	if (this.testingOn && this.checkIterations('printActual', iterationLimit)) {
-		this.log('\n Actual result is:\n' + this.actual.toString() + '\n');
+	if (this.testingOn &amp;&amp; this.checkIterations(&#x27;printActual&#x27;, iterationLimit)) {
+		this.log(&#x27;\n Actual result is:\n&#x27; + this.actual.toString() + &#x27;\n&#x27;);
 	}
 	return this;
 }
@@ -408,7 +491,7 @@ TestItem.prototype.log = function(message) {
 * @type String
 * @private
 */
-TestItem.prototype.passString = '\nPass: the returned result ';
+TestItem.prototype.passString = &#x27;\nPass: the returned result &#x27;;
 
 /**
 * The beginning of the line printed when a testfails
@@ -417,7 +500,7 @@ TestItem.prototype.passString = '\nPass: the returned result ';
 * @type String
 * @private
 */
-TestItem.prototype.failString = '\n***FAIL: the returned result ';
+TestItem.prototype.failString = &#x27;\n***FAIL: the returned result &#x27;;
 
 /**
 * The beginning of the line printed when there is an error attempting to run a test
@@ -426,7 +509,7 @@ TestItem.prototype.failString = '\n***FAIL: the returned result ';
 * @type String
 * @private
 */
-TestItem.prototype.errorString = '\n***TnT ERROR: ';
+TestItem.prototype.errorString = &#x27;\n***TnT ERROR: &#x27;;
 
 /**
 * This method should be called at the end of a chain of tests to return the value that was being tested, just as if the function was called without any tests attached
@@ -454,14 +537,14 @@ TestItem.prototype.checkIterations = function(testName, iterationLimit) {
 		if (!this.iterations[testName]) {
 			this.iterations[testName] = 0;
 		}
-		if (this.iterations[testName] < iterationLimit) {
+		if (this.iterations[testName] &lt; iterationLimit) {
 			this.iterations[testName]++;
-			return true; // we have had less iterations than the iterationLimit, so we're OK to run the test again
+			return true; // we have had less iterations than the iterationLimit, so we&#x27;re OK to run the test again
 		} else {
-			return false; // we have reached the iterationLimit, so we can't run the test again
+			return false; // we have reached the iterationLimit, so we can&#x27;t run the test again
 		}
 	} else {
-		return true; //there's no iterationLimit so we can run as many tests as we like
+		return true; //there&#x27;s no iterationLimit so we can run as many tests as we like
 	}
 }
 
@@ -481,3 +564,22 @@ TestItem.prototype.resetIterations = function(testName) {
 		}
 	}
 }
+
+    </pre>
+</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../assets/vendor/prettify/prettify-min.js"></script>
+<script>prettyPrint();</script>
+<script src="../assets/js/yui-prettify.js"></script>
+<script src="../assets/../api.js"></script>
+<script src="../assets/js/api-filter.js"></script>
+<script src="../assets/js/api-list.js"></script>
+<script src="../assets/js/api-search.js"></script>
+<script src="../assets/js/apidocs.js"></script>
+</body>
+</html>

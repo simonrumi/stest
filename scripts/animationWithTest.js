@@ -52,6 +52,19 @@ tempTest.addFunction('loopingFn', function() {
 });
 tempTest.loopingFn();
 
+tempTest.addFunction('getBodyTag', function() {
+	return document.getElementsByTagName("BODY")[0];
+});
+
+document.addEventListener("DOMContentLoaded", function(event) {
+	var theBody = tempTest.getBodyTag()
+		.describe('Getting the body tag')
+		.expect('htmlElement')
+		.expect('htmlElement', HTMLBodyElement)
+		.expect('htmlElement', HTMLButtonElement)
+		.endTests();
+});
+
 
 /*
 * Testing of a more realistic set of functions, for displaying animated text, start here
