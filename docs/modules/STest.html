@@ -82,7 +82,7 @@
 
 
         <div class="foundat">
-            Defined in: <a href="../files/scripts_sTest.js.html#l106"><code>scripts\sTest.js:106</code></a>
+            Defined in: <a href="../files/scripts_sTest.js.html#l140"><code>scripts\sTest.js:140</code></a>
         </div>
 
 </div>
@@ -108,7 +108,15 @@ myTestableObj.addFunction(&#39;addNums&#39;, function(num1, num2) {
     .expect(&#39;something&#39;)
     .expect(&#39;toBe&#39;, 9)
     .endTests();
-</code></pre><p>note that you always have to end with endTests(), even if you ran no tests, in order to return the value output by the function</p>
+</code></pre><p>...note that you always have to end with endTests(), even if you ran no tests, in order to return the value output by the function.</p>
+<p>If you want to test just a raw value (rather than the output of a function) you can do this:</p>
+<pre class="code prettyprint"><code>var myTestableObj = new Testable();
+myTestableObject.testRawValue(myValue)
+    .describe(&#39;testing myValue&#39;)
+    .expect(&#39;something&#39;)
+    .expect(&#39;toBe&#39;, &#39;The answser is 42&#39;)
+    .endTests();
+</code></pre><p>For a listing of all the available tests, look at TestItem -&gt; Attributes (the available tests aren&#39;t really attributes, but &#39;Attributes&#39; was a place to list them)</p>
 
         </div>
     </div>

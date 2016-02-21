@@ -19,7 +19,18 @@
 *		.expect('toBe', 9)
 *		.endTests();
 *
-* note that you always have to end with endTests(), even if you ran no tests, in order to return the value output by the function
+* ...note that you always have to end with endTests(), even if you ran no tests, in order to return the value output by the function.
+*
+* If you want to test just a raw value (rather than the output of a function) you can do this:
+*
+* 	var myTestableObj = new Testable();
+*	myTestableObject.testRawValue(myValue)
+*		.describe('testing myValue')
+*		.expect('something')
+*		.expect('toBe', 'The answser is 42')
+*		.endTests();
+*
+* For a listing of all the available tests, look at TestItem -> Attributes (the available tests aren't really attributes, but 'Attributes' was a place to list them)
 *
 * @module STest
 *
@@ -76,14 +87,6 @@ Testable.prototype.addFunction = function(functionName, functionObj) {
 /**
 * This is used by addFunction to register TestItems in the testItems collection
 * and associate the result being tested with it. (If the TestItem has previously been added to testItems, it is not added twice)
-*
-* @example
-* 	var myTestableObj = new Testable();
-*	myTestableObject.testRawValue(myValue)
-*		.describe('testing myValue')
-*		.expect('something')
-*		.expect('toBe', 'The answser is 42')
-*		.endTests();
 *
 * @method registerTestItem
 * @param {String} functionName The name of the function
@@ -353,7 +356,7 @@ TestItem.prototype.tests = {
 	*		.expect('doesNotContain', 'Mary')
 	*		.endTests();
 	*
-	* @attribute contains
+	* @attribute doesNotContain
 	*/
 	'doesNotContain': {
 		args: ['unexpectedValue', 'iterationLimit'],

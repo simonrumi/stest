@@ -102,7 +102,18 @@
 *		.expect(&#x27;toBe&#x27;, 9)
 *		.endTests();
 *
-* note that you always have to end with endTests(), even if you ran no tests, in order to return the value output by the function
+* ...note that you always have to end with endTests(), even if you ran no tests, in order to return the value output by the function.
+*
+* If you want to test just a raw value (rather than the output of a function) you can do this:
+*
+* 	var myTestableObj = new Testable();
+*	myTestableObject.testRawValue(myValue)
+*		.describe(&#x27;testing myValue&#x27;)
+*		.expect(&#x27;something&#x27;)
+*		.expect(&#x27;toBe&#x27;, &#x27;The answser is 42&#x27;)
+*		.endTests();
+*
+* For a listing of all the available tests, look at TestItem -&gt; Attributes (the available tests aren&#x27;t really attributes, but &#x27;Attributes&#x27; was a place to list them)
 *
 * @module STest
 *
@@ -126,6 +137,14 @@ var Testable = function Testable() {
 	* @private
 	*/
 	this.testingOn = true;
+
+	/**
+	* Used by testRawValue below, this value is a TestItem for testing raw values (rather than for testing functions)
+	*
+	* @property {TestItem} __testableSelf
+	* @private
+	*/
+	this.__testableSelf;
 }
 
 /**
@@ -154,7 +173,7 @@ Testable.prototype.addFunction = function(functionName, functionObj) {
 *
 * @method registerTestItem
 * @param {String} functionName The name of the function
-* @param {any} The value returned by the function that is to be tested
+* @param {any} resultToTest The value returned by the function that is to be tested
 * @return {TestItem} The TestItem, now registered and with the resultToTest associated with it
 * @private
 */
@@ -165,6 +184,21 @@ Testable.prototype.registerTestItem = function(functionName, resultToTest) {
 		this.testItems[functionName] = new TestItem(resultToTest, this.testingOn);
 	}
 	return this.testItems[functionName];
+}
+
+/**
+* As well as testing values returned by functions as they are executed, we also want the ability to run tests on values that we have gotten from a means other than by running Testable functions.
+* Hence testRawValue allows you to run all the TestItem tests on just a raw value that you hand it
+*
+* @method testRawValue
+* @param {any} rawValue A value or object to test
+* @return {any} returns the rawValue you gave it.
+*/
+Testable.prototype.testRawValue = function(rawValue) {
+	// register a TestItem to represent this Testable object.
+	// Usually registerTestItem is used to register functions, but here we are giving it a key name of &#x27;__testableSelf&#x27; in order to get back a TestItem that we can sue for testing
+	this.__testableSelf = this.registerTestItem(&#x27;__testableSelf&#x27;, rawValue);
+	return this.__testableSelf;
 }
 
 /**
@@ -405,7 +439,7 @@ TestItem.prototype.tests = {
 	*		.expect(&#x27;doesNotContain&#x27;, &#x27;Mary&#x27;)
 	*		.endTests();
 	*
-	* @attribute contains
+	* @attribute doesNotContain
 	*/
 	&#x27;doesNotContain&#x27;: {
 		args: [&#x27;unexpectedValue&#x27;, &#x27;iterationLimit&#x27;],

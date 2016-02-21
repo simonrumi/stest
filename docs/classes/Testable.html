@@ -123,6 +123,10 @@
                                 <a href="#method_setTestingOn">setTestingOn</a>
 
                             </li>
+                            <li class="index-item method">
+                                <a href="#method_testRawValue">testRawValue</a>
+
+                            </li>
                     </ul>
                 </div>
 
@@ -130,6 +134,10 @@
                     <h3>Properties</h3>
 
                     <ul class="index-list properties">
+                            <li class="index-item property private">
+                                <a href="#property___testableSelf">__testableSelf</a>
+
+                            </li>
                             <li class="index-item property private">
                                 <a href="#property_testingOn">testingOn</a>
 
@@ -165,7 +173,7 @@
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/scripts_sTest.js.html#l48"><code>scripts\sTest.js:48</code></a>
+        <a href="../files/scripts_sTest.js.html#l67"><code>scripts\sTest.js:67</code></a>
         </p>
 
 
@@ -199,7 +207,7 @@
                         <code>functionName</code>
                 </li>
                 <li class="arg">
-                        <code>The</code>
+                        <code>resultToTest</code>
                 </li>
             </ul><span class="paren">)</span>
         </div>
@@ -218,7 +226,7 @@
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/scripts_sTest.js.html#l68"><code>scripts\sTest.js:68</code></a>
+        <a href="../files/scripts_sTest.js.html#l87"><code>scripts\sTest.js:87</code></a>
         </p>
 
 
@@ -247,12 +255,12 @@ and associate the result being tested with it. (If the TestItem has previously b
 
                 </li>
                 <li class="param">
-                        <code class="param-name">The</code>
+                        <code class="param-name">resultToTest</code>
                         <span class="type">Any</span>
 
 
                     <div class="param-description">
-                        <p>value returned by the function that is to be tested</p>
+                        <p>The value returned by the function that is to be tested</p>
 
                     </div>
 
@@ -296,7 +304,7 @@ and associate the result being tested with it. (If the TestItem has previously b
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/scripts_sTest.js.html#l87"><code>scripts\sTest.js:87</code></a>
+        <a href="../files/scripts_sTest.js.html#l121"><code>scripts\sTest.js:121</code></a>
         </p>
 
 
@@ -340,11 +348,104 @@ and associate the result being tested with it. (If the TestItem has previously b
 
 
 </div>
+<div id="method_testRawValue" class="method item">
+    <h3 class="name"><code>testRawValue</code></h3>
+
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+                <li class="arg">
+                        <code>rawValue</code>
+                </li>
+            </ul><span class="paren">)</span>
+        </div>
+
+        <span class="returns-inline">
+            <span class="type">Any</span>
+        </span>
+
+
+
+
+
+
+
+    <div class="meta">
+                <p>
+                Defined in
+        <a href="../files/scripts_sTest.js.html#l106"><code>scripts\sTest.js:106</code></a>
+        </p>
+
+
+
+    </div>
+
+    <div class="description">
+        <p>As well as testing values returned by functions as they are executed, we also want the ability to run tests on values that we have gotten from a means other than by running Testable functions.
+Hence testRawValue allows you to run all the TestItem tests on just a raw value that you hand it</p>
+
+    </div>
+
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+                <li class="param">
+                        <code class="param-name">rawValue</code>
+                        <span class="type">Any</span>
+
+
+                    <div class="param-description">
+                        <p>A value or object to test</p>
+
+                    </div>
+
+                </li>
+            </ul>
+        </div>
+
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                        <span class="type">Any</span>:
+                    <p>returns the rawValue you gave it.</p>
+
+            </div>
+        </div>
+
+
+</div>
             </div>
 
             <div id="properties" class="api-class-tabpanel">
                 <h2 class="off-left">Properties</h2>
 
+                    <div id="property___testableSelf" class="property item private">
+                        <h3 class="name"><code>__testableSelf</code></h3>
+                        <span class="type"><a href="../classes/TestItem.html" class="crosslink">TestItem</a></span>
+                    
+                    
+                            <span class="flag private">private</span>
+                    
+                    
+                    
+                        <div class="meta">
+                                    <p>
+                                    Defined in
+                            <a href="../files/scripts_sTest.js.html#l58"><code>scripts\sTest.js:58</code></a>
+                            </p>
+                    
+                    
+                        </div>
+                    
+                        <div class="description">
+                            <p>Used by testRawValue below, this value is a TestItem for testing raw values (rather than for testing functions)</p>
+                    
+                        </div>
+                    
+                    
+                    
+                    </div>
                     <div id="property_testingOn" class="property item private">
                         <h3 class="name"><code>testingOn</code></h3>
                         <span class="type">Boolean</span>
@@ -357,7 +458,7 @@ and associate the result being tested with it. (If the TestItem has previously b
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/scripts_sTest.js.html#l38"><code>scripts\sTest.js:38</code></a>
+                            <a href="../files/scripts_sTest.js.html#l49"><code>scripts\sTest.js:49</code></a>
                             </p>
                     
                     
@@ -384,7 +485,7 @@ and associate the result being tested with it. (If the TestItem has previously b
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/scripts_sTest.js.html#l30"><code>scripts\sTest.js:30</code></a>
+                            <a href="../files/scripts_sTest.js.html#l41"><code>scripts\sTest.js:41</code></a>
                             </p>
                     
                     
