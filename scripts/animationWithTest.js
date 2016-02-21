@@ -27,7 +27,17 @@ var fourPlusFive = tempTest.addNums(4,5)
 	.expect('doesNotContain', 'a string')
 	.endTests();
 
+tempTest.testRawValue(42)
+	.describe('testing the raw value 42')
+	.expect('toBe', 42)
+	.endTests();
 
+var myString = 'the quality of mercy is not strained';
+tempTest.testRawValue(myString)
+	.describe('testing myString')
+	.expect('contains', 'mercy')
+	.expect('doesNotContain', 'stewed apples')
+	.endTests();
 
 var joinedStrings = tempTest.concatStrings('foo','bar')
 	.describe("Testing concatStrings('foo','bar')")

@@ -43,6 +43,14 @@ var Testable = function Testable() {
 	* @private
 	*/
 	this.testingOn = true;
+
+	/**
+	* Used by testRawValue below, this value is a TestItem for testing raw values (rather than for testing functions)
+	*
+	* @property {TestItem} __testableSelf
+	* @private
+	*/
+	this.__testableSelf;
 }
 
 /**
@@ -69,9 +77,17 @@ Testable.prototype.addFunction = function(functionName, functionObj) {
 * This is used by addFunction to register TestItems in the testItems collection
 * and associate the result being tested with it. (If the TestItem has previously been added to testItems, it is not added twice)
 *
+* @example
+* 	var myTestableObj = new Testable();
+*	myTestableObject.testRawValue(myValue)
+*		.describe('testing myValue')
+*		.expect('something')
+*		.expect('toBe', 'The answser is 42')
+*		.endTests();
+*
 * @method registerTestItem
 * @param {String} functionName The name of the function
-* @param {any} The value returned by the function that is to be tested
+* @param {any} resultToTest The value returned by the function that is to be tested
 * @return {TestItem} The TestItem, now registered and with the resultToTest associated with it
 * @private
 */
@@ -82,6 +98,21 @@ Testable.prototype.registerTestItem = function(functionName, resultToTest) {
 		this.testItems[functionName] = new TestItem(resultToTest, this.testingOn);
 	}
 	return this.testItems[functionName];
+}
+
+/**
+* As well as testing values returned by functions as they are executed, we also want the ability to run tests on values that we have gotten from a means other than by running Testable functions.
+* Hence testRawValue allows you to run all the TestItem tests on just a raw value that you hand it
+*
+* @method testRawValue
+* @param {any} rawValue A value or object to test
+* @return {any} returns the rawValue you gave it.
+*/
+Testable.prototype.testRawValue = function(rawValue) {
+	// register a TestItem to represent this Testable object.
+	// Usually registerTestItem is used to register functions, but here we are giving it a key name of '__testableSelf' in order to get back a TestItem that we can sue for testing
+	this.__testableSelf = this.registerTestItem('__testableSelf', rawValue);
+	return this.__testableSelf;
 }
 
 /**
