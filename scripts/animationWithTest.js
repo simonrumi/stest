@@ -15,13 +15,14 @@ tempTest.addFunction('concatStrings', function(str1, str2) {
 	return str1.concat(str2);
 });
 
-tempTest.setTestingOn(false, 'addNums');
+//tempTest.setTestingOn(false, 'addNums');
 
 var fourPlusFive = tempTest.addNums(4,5)
 	.describe('Testing addNums(4,5)')
+	.printAsWarning()
 	.expect('something')
-	.expect('true')
-	.expect('toBe', 9)
+	.expect('false')
+	.expect('toBe', 34)
 	.expect('contains', 40)
 	.expect('contains', 9)
 	.expect('doesNotContain', 'a string')
@@ -30,7 +31,16 @@ var fourPlusFive = tempTest.addNums(4,5)
 tempTest.testRawValue(42)
 	.describe('testing the raw value 42')
 	.expect('toBe', 42)
+	.printAsWarning()
+	.expect('htmlElement')
 	.endTests();
+
+var twoPlusFive = tempTest.addNums(2,5)
+	.describe('Testing addNums(2,5)')
+	.expect('something')
+	.expect('contains', 'eggs')
+	.expect('toBe', 34)
+	.endTests()
 
 var myString = 'the quality of mercy is not strained';
 tempTest.testRawValue(myString)

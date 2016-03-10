@@ -391,7 +391,7 @@ TestItem.prototype.expect = function(testName, expectedValue, iterationLimit) {
 				testingFunction.apply(this,args); //now we run the test function, passing on the args (but without the testName included)
 			}
 		} else {
-			this.log('\n***Error: "' + testName + '" is not the name of a known test\n');
+			this.log(this.errorString + testName + '" is not the name of a known test\n');
 		}
 	}
 	return this; // after having run the test, we return "this", which is the TestItem object, so that further tests can be run
@@ -434,6 +434,19 @@ TestItem.prototype.log = function(message) {
 	}
 }
 
+/**
+* Prints the test failures as warnings instead of outright failures
+*
+* @method printAsWarning
+* @return This TestItem (to be passed to other tests)
+*/
+TestItem.prototype.printAsWarning = function() {
+	if (this.testingOn) {
+		this.failString = this.failAsWarningString;
+	}
+	return this;
+}
+
 
 /**
 * The beginning of the line printed when a test passes
@@ -445,13 +458,33 @@ TestItem.prototype.log = function(message) {
 TestItem.prototype.passString = '\nPass: the returned result ';
 
 /**
-* The beginning of the line printed when a testfails
+* The beginning of the line printed when a test fails but we just want to call it a warning
 *
-* @property failString
+* @property failAsWarningString
 * @type String
 * @private
 */
-TestItem.prototype.failString = '\n***FAIL: the returned result ';
+TestItem.prototype.failAsWarningString = '\n** WARNING: the returned result ';
+
+/**
+* The beginning of the line printed when a test fails and we want to call it a failure
+*
+* @property failAsFailString
+* @type String
+* @private
+*/
+TestItem.prototype.failAsFailString = '\n*** FAIL: the returned result ';
+
+/**
+* The beginning of the line printed when there is an error attempting to run a test.
+* This is set as either the failAsWarningString or failAsFailString
+*
+* @property failString
+* @type String
+* @default The value of the property failAsFailString
+* @private
+*/
+TestItem.prototype.failString = TestItem.failAsFailString;
 
 /**
 * The beginning of the line printed when there is an error attempting to run a test
@@ -460,7 +493,9 @@ TestItem.prototype.failString = '\n***FAIL: the returned result ';
 * @type String
 * @private
 */
-TestItem.prototype.errorString = '\n***TnT ERROR: ';
+TestItem.prototype.errorString = '\n*** sTest ERROR: ';
+
+
 
 /**
 * This method should be called at the end of a chain of tests to return the value that was being tested, just as if the function was called without any tests attached
@@ -469,6 +504,7 @@ TestItem.prototype.errorString = '\n***TnT ERROR: ';
 * @return {any} the original value, returned by the function, that has been tested
 */
 TestItem.prototype.endTests = function() {
+	this.failString = this.failAsFailString; // resetting this in case it was set to failAsWarningString
 	return this.actual;
 }
 
