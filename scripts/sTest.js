@@ -153,6 +153,7 @@ Testable.prototype.setTestingOn = function(testingOn, functionName) {
 var TestItem = function(resultToTest, testingOn) {
 	this.actual = resultToTest;
 	this.testingOn = testingOn;
+	this.failString = this.failAsFailString; // initialize the defalut value of the failString
 
 	// this.iterations will be populated with the number of iterations for each test, like this
 	// {'toBe': 2, 'type': 1, etc}
@@ -274,7 +275,9 @@ TestItem.prototype.tests = {
 	},
 
 	/**
-	* Logs a PASS  if the result being tested is an object of the expected type (the 2nd parameter), Logs a FAIL if not
+	* Logs a PASS  if the result being tested is an object of the expected type (the 2nd parameter), Logs a FAIL if not.
+	* Note that you can check for a fundamental type by passing in the 1st parameter as either String, Array, Number or Boolean
+	* or by passing in a string, like 'number', 'string', etc (the strings are case insensitive)
 	*
 	* @example
 	* 	var myCar = myTestableObj.getCarObj()
@@ -287,10 +290,42 @@ TestItem.prototype.tests = {
 	'type': {
 		args: ['expectedType', 'iterationLimit'],
 		func: function(expectedType, iterationLimit) {
-			if (this.actual instanceof expectedType) {
-				this.log(this.passString + ' is an instance of the expected type\n');
+			var typeofActual = typeof this.actual;
+			var expectedTypeRegex;
+
+			if ((typeof expectedType).match(/string/i)) {
+				// in this case the expectedType is a string with the name of a javascript core type - 'number', 'string', 'boolean', (and maybe 'null', 'undefined',  or 'symbol')
+				expectedTypeRegex = new RegExp(expectedType, 'i');
+				if (typeofActual.match(expectedTypeRegex)) {
+					this.log(this.passString + ' is of the expected type ' + expectedType + '\n');
+				} else if (expectedType.match(/Array/i)) {
+					// this is for dealing with the forgivable error that you thought an Array was a core type (like String or Number)
+					// Then you might pass in expectedType as the string 'Array'
+					if(this.actual instanceof Array) {
+						this.log(this.passString + ' is an Array\n');
+					} else {
+						this.log(this.failString + ' is NOT an Array\n');
+					}
+				} else {
+					this.log(this.failString + ' is NOT of the expected type ' + expectedType + ', it is of type ' + typeofActual + '\n');
+				}
 			} else {
-				this.log(this.failString + ' is NOT an instance of the expected type\n');
+				// in this case the expectedType is actually an object of some sort and we use instanceof to check for a match
+				if (this.actual instanceof expectedType) {
+					this.log(this.passString + ' is an instance of the expected type\n');
+				} else if (expectedType.name) {
+					// for some types (particularly Sting, Boolean and Number) you can't do, for example:
+					// 	myString instanceof String
+					// ...and get the expected answer, so instead we do this
+					expectedTypeRegex = new RegExp(expectedType.name, 'i');
+					if (typeofActual.match(expectedTypeRegex)) {
+						this.log(this.passString + ' is of the expected type ' + expectedType.name + '\n');
+					} else {
+						this.log(this.failString + ' is NOT of the expected type ' + expectedType.name + ', it is of type ' + typeofActual + '\n');
+					}
+				} else {
+					this.log(this.failString + ' is NOT an instance of the expected type\n');
+				}
 			}
 		},
 	},

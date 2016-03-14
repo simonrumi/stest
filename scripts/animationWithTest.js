@@ -15,7 +15,7 @@ tempTest.addFunction('concatStrings', function(str1, str2) {
 	return str1.concat(str2);
 });
 
-//tempTest.setTestingOn(false, 'addNums');
+tempTest.setTestingOn(false, 'addNums');
 
 var fourPlusFive = tempTest.addNums(4,5)
 	.describe('Testing addNums(4,5)')
@@ -33,6 +33,28 @@ tempTest.testRawValue(42)
 	.expect('toBe', 42)
 	.printAsWarning()
 	.expect('htmlElement')
+	.expect('type', 'string')
+	.expect('type', 'Array')
+	.expect('type', 'NUMBER')
+	.expect('type', Number)
+	.endTests();
+
+tempTest.testRawValue([4, 2])
+	.describe('testing the array [4, 2]')
+	.expect('type', Array)
+	.expect('type', 'Array')
+	.endTests();
+
+tempTest.testRawValue('my pony')
+	.describe('testing the string "my pony"')
+	.expect('type', String)
+	.expect('type', 'StRing')
+	.endTests();
+
+tempTest.testRawValue(false)
+	.describe('testing a boolean with the value false')
+	.expect('type', Boolean)
+	.expect('type', 'booleaN')
 	.endTests();
 
 var twoPlusFive = tempTest.addNums(2,5)
