@@ -7,6 +7,8 @@ var tempTest = new Testable();
 
 tempTest.setTestingOn(true);
 
+tempTest.logPasses(false);
+
 tempTest.addFunction('addNums', function(num1, num2) {
 	return num1 + num2;
 });
@@ -15,7 +17,7 @@ tempTest.addFunction('concatStrings', function(str1, str2) {
 	return str1.concat(str2);
 });
 
-tempTest.setTestingOn(false, 'addNums');
+tempTest.setTestingOn(true, 'addNums');
 
 var fourPlusFive = tempTest.addNums(4,5)
 	.describe('Testing addNums(4,5)')
